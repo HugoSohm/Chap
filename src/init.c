@@ -23,18 +23,14 @@ iph_t *init_iph(int ac, char **av)
     iph->src = inet_addr(av[1]);
     iph->dest = inet_addr(av[3]);
 
+    iph->sin.sin_family = AF_INET;
+    iph->din.sin_family = AF_INET;
+    iph->sin.sin_port = htons(atoi(av[2]));
+    iph->din.sin_port = htons(atoi(av[4]));
+    iph->sin.sin_addr.s_addr = inet_addr(av[1]);
+    iph->din.sin_addr.s_addr = inet_addr(av[3]);
+
     return (iph);
-}
-
-udph_t *init_udph(int ac, char **av)
-{
-    udph_t *udph = malloc(sizeof(udph_t));
-
-    udph->udph_srcport = htons(atoi(av[2]));
-    udph->udph_destport = htons(atoi(av[4]));
-    udph->udph_len = htons(sizeof(udph_t));
-
-    return (udph);
 }
 
 iph2_t *init_iph2(int ac, char **av)
@@ -53,7 +49,25 @@ iph2_t *init_iph2(int ac, char **av)
     iph2->src = inet_addr(av[1]);
     iph2->dest = inet_addr(av[3]);
 
+    iph2->sin.sin_family = AF_INET;
+    iph2->din.sin_family = AF_INET;
+    iph2->sin.sin_port = htons(atoi(av[2]));
+    iph2->din.sin_port = htons(atoi(av[4]));
+    iph2->sin.sin_addr.s_addr = inet_addr(av[1]);
+    iph2->din.sin_addr.s_addr = inet_addr(av[3]);
+
     return (iph2);
+}
+
+udph_t *init_udph(int ac, char **av)
+{
+    udph_t *udph = malloc(sizeof(udph_t));
+
+    udph->udph_srcport = htons(atoi(av[2]));
+    udph->udph_destport = htons(atoi(av[4]));
+    udph->udph_len = htons(sizeof(udph_t));
+
+    return (udph);
 }
 
 tcph_t *init_tcph(int ac, char **av)

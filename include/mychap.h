@@ -92,7 +92,7 @@ typedef struct tcph_s
 int main(int ac, char **av);
 int mychap(int ac, char **av);
 int mychap2(int ac, char **av);
-void help();
+void help(void);
 
 unsigned short csum(unsigned short *buf, int nwords);
 unsigned short csum2(unsigned short *buf, int len);

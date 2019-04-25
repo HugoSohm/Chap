@@ -27,14 +27,16 @@ int mychap2(int ac, char **av)
     } else
         printf("socket()-SOCK_RAW and tcp protocol is OK.\n");
 
-    iph2->csum = csum((unsigned short *)buffer, (sizeof(iph2_t) + sizeof(tcph_t)));
+    iph2->csum = csum((unsigned short *)buffer,
+    (sizeof(iph2_t) + sizeof(tcph_t)));
 
     if (setsockopt(sd, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0) {
         perror("setsockopt() error");
         exit(84);
     } else
         printf("setsockopt() is OK\n");
-    printf("Using:::::Source IP: %s port: %u, Target IP: %s port: %u.\n", av[1], atoi(av[2]), av[3], atoi(av[4]));
+    printf("Using:::::Source IP: %s port: %u, Target IP: %s port: %u.\n",
+    av[1], atoi(av[2]), av[3], atoi(av[4]));
 
     sending2(sd, buffer, iph2);
     close(sd);

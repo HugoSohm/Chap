@@ -9,26 +9,27 @@
 
 int mychap(int ac, char **av)
 {
-    iph_t *iph = init_iph(ac, av);
-    udph_t *udph = init_udph(ac, av);
     int target = atoi(av[2]);
     int port = atoi(av[4]);
     char *password = av[6];
-
     char buffer[PCKT_LEN];
-    struct ipheader *ip = (struct ipheader *)buffer;
     int one = 1;
     const int *val = &one;
     int sd;
 
+    iph_t *iph = (iph_t *)buffer;
+    udph_t *udph = (udph_t *)(buffer + sizeof(iph_t));
+    init_iph(ac, av, iph);
+    init_udph(ac, av, udph);
+
     memset(buffer, 0, PCKT_LEN);
-    sd = socket(PF_INET, SOCK_RAW, IPPROTO_UDP);
+    sd = socket(AF_INET, SOCK_RAW, IPPROTO_UDP);
 
     if (sd < 0) {
         perror("socket() error");
         exit(84);
     } else
-        printf("socket() - Using SOCK_RAW socket and UDP protocol is OK.\n");
+        printf("socket : OK\n");
     iph->csum = csum((unsigned short *)buffer,
     sizeof(iph_t) + sizeof(udph_t));
 
@@ -36,11 +37,7 @@ int mychap(int ac, char **av)
         perror("setsockopt() error");
         exit(84);
     } else
-        printf("setsockopt() is OK.\n");
-    printf("Trying...\n");
-    printf("Using raw socket and UDP protocol\n");
-    printf("Using Source IP: %s port: %u, Target IP: %s port: %u.\n",
-    av[1], atoi(av[2]), av[3], atoi(av[4]));
+        printf("setsockopt : OK\n");
 
     sending(sd, buffer, iph);
     close(sd);

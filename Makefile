@@ -9,7 +9,6 @@ NAME		=	client
 
 SRCS    	=	src/main.c		\
 				src/mychap.c	\
-				src/mychap2.c	\
 				src/init.c		\
 				src/sending.c	\
 				src/functions.c

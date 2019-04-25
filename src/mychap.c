@@ -11,8 +11,8 @@ int mychap(int ac, char **av)
 {
     iph_t *iph = init_iph(ac, av);
     udph_t *udph = init_udph(ac, av);
-    int target = av[2];
-    int port = av[4];
+    int target = atoi(av[2]);
+    int port = atoi(av[4]);
     char *password = av[6];
 
     char buffer[PCKT_LEN];

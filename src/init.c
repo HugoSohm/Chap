@@ -22,14 +22,12 @@ iph_t *init_iph(int ac, char **av)
     iph->offset = 13;
     iph->src = inet_addr(av[1]);
     iph->dest = inet_addr(av[3]);
-
     iph->sin.sin_family = AF_INET;
     iph->din.sin_family = AF_INET;
     iph->sin.sin_port = htons(atoi(av[2]));
     iph->din.sin_port = htons(atoi(av[4]));
     iph->sin.sin_addr.s_addr = inet_addr(av[1]);
     iph->din.sin_addr.s_addr = inet_addr(av[3]);
-
     return (iph);
 }
 
@@ -48,14 +46,12 @@ iph2_t *init_iph2(int ac, char **av)
     iph2->csum = 0;
     iph2->src = inet_addr(av[1]);
     iph2->dest = inet_addr(av[3]);
-
     iph2->sin.sin_family = AF_INET;
     iph2->din.sin_family = AF_INET;
     iph2->sin.sin_port = htons(atoi(av[2]));
     iph2->din.sin_port = htons(atoi(av[4]));
     iph2->sin.sin_addr.s_addr = inet_addr(av[1]);
     iph2->din.sin_addr.s_addr = inet_addr(av[3]);
-
     return (iph2);
 }
 

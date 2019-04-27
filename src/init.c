@@ -33,11 +33,13 @@ struct iphdr *init_iphdr(char **av, client_t *client)
     iph->ihl = 5;
     iph->version = 4;
     iph->tos = 0;
-    iph->tot_len = htons(sizeof(struct iphdr) + sizeof(struct udphdr) + client->len);
+    iph->tot_len = htons(sizeof(struct iphdr) +
+    sizeof(struct udphdr) + client->len);
     iph->id = htons(54321);
     iph->ttl = 64;
     iph->protocol = 17;
-    iph->check = csum((unsigned short *)client->buffer, sizeof(struct iphdr) + sizeof(struct udphdr));
+    iph->check = csum((unsigned short *)client->buffer,
+    sizeof(struct iphdr) + sizeof(struct udphdr));
     iph->saddr = inet_addr("127.0.0.1");
     iph->daddr = inet_addr(av[2]);
     iph->check = 0;

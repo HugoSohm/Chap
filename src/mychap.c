@@ -16,12 +16,14 @@ int mychap(char **av)
     if (client->sock < 0)
         error_msg("Socket error");
 
-    if (setsockopt(client->sock, IPPROTO_IP, IP_HDRINCL, &client->on, sizeof(client->on)) < 0)
+    if (setsockopt(client->sock, IPPROTO_IP, IP_HDRINCL, &client->on,
+    sizeof(client->on)) < 0)
         error_msg("Setsockopt error");
 
     memcpy(client->buffer, iph, sizeof(struct iphdr));
     memcpy(client->buffer + sizeof(struct iphdr), udph, sizeof(struct udphdr));
-    memcpy(client->buffer + sizeof(struct iphdr) + sizeof(struct udphdr), client->data, client->len);
+    memcpy(client->buffer + sizeof(struct iphdr) + sizeof(struct udphdr),
+    client->data, client->len);
 
     send_msg(client);
     close(client->sock);

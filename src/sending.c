@@ -14,3 +14,10 @@ void send_msg(client_t *client)
     &client->sin, sizeof(client->sin)) < 0)
         error_msg("Sendto error");
 }
+
+void get_msg(client_t *client)
+{
+    if (recvfrom(client->sock, client->rec, BUFSIZE, MSG_WAITALL,
+    (struct sockaddr *)&client->sin, &client->len) < 0)
+        error_msg("Recv error");
+}

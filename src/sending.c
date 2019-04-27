@@ -7,12 +7,9 @@
 
 #include "mychap.h"
 
-void sending(int sd, char *buffer, iph_t *iph)
+void send_msg(client_t *client)
 {
-    if (sendto(sd, buffer, iph->len, 0, (struct sockaddr *)&iph->sin,
-    sizeof(iph->sin)) < 0) {
-        perror("sendto() error");
-        exit(84);
-    } else
-        printf("hello world\n");
+    if (sendto(client->sock, client->buffer, strlen(client->data) + sizeof(struct iphdr) + sizeof(struct udphdr), 0, (struct sockaddr *)&client->sin,
+    sizeof(client->sin)) < 0)
+        error_msg("Sendto error");
 }

@@ -25,6 +25,6 @@ int main(int ac, char **av)
         help();
         return (84);
     } else
-        mychap(ac, av);
+        mychap(av);
     return (0);
 }

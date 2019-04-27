@@ -7,39 +7,23 @@
 
 #include "mychap.h"
 
-int mychap(int ac, char **av)
+int mychap(char **av)
 {
-    int target = atoi(av[2]);
-    int port = atoi(av[4]);
-    char *password = av[6];
-    char buffer[PCKT_LEN];
-    int one = 1;
-    const int *val = &one;
-    int sd;
+    client_t *client = init_client(av);
+    struct iphdr *iph = init_iphdr(av, client);
+    struct udphdr *udph = init_udphdr(av, client);
 
-    iph_t *iph = (iph_t *)buffer;
-    udph_t *udph = (udph_t *)(buffer + sizeof(iph_t));
-    init_iph(ac, av, iph);
-    init_udph(ac, av, udph);
+    if (client->sock < 0)
+        error_msg("Socket error");
 
-    memset(buffer, 0, PCKT_LEN);
-    sd = socket(AF_INET, SOCK_RAW, IPPROTO_UDP);
+    if (setsockopt(client->sock, IPPROTO_IP, IP_HDRINCL, &client->on, sizeof(client->on)) < 0)
+        error_msg("Setsockopt error");
 
-    if (sd < 0) {
-        perror("socket() error");
-        exit(84);
-    } else
-        printf("socket : OK\n");
-    iph->csum = csum((unsigned short *)buffer,
-    sizeof(iph_t) + sizeof(udph_t));
+    memcpy(client->buffer, iph, sizeof(struct iphdr));
+    memcpy(client->buffer + sizeof(struct iphdr), udph, sizeof(struct udphdr));
+    memcpy(client->buffer + sizeof(struct iphdr) + sizeof(struct udphdr), client->data, client->len);
 
-    if (setsockopt(sd, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0) {
-        perror("setsockopt() error");
-        exit(84);
-    } else
-        printf("setsockopt : OK\n");
-
-    sending(sd, buffer, iph);
-    close(sd);
+    send_msg(client);
+    close(client->sock);
     return (0);
 }

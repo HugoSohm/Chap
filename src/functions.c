@@ -18,3 +18,9 @@ unsigned short csum(unsigned short *buf, int nwords)
 
     return (unsigned short)(~sum);
 }
+
+void error_msg(char *msg)
+{
+    perror(msg);
+    exit(84);
+}

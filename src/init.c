@@ -7,28 +7,52 @@
 
 #include "mychap.h"
 
-void init_iph(int ac, char **av, iph_t *iph)
+client_t *init_client(char **av)
 {
+    client_t *client = malloc(sizeof(*client));
+
+    client->data = strdup("client hello");
+    client->data = "client hello";
+    client->sock = socket(AF_INET, SOCK_RAW, IPPROTO_UDP);
+    client->on = 1;
+    client->port = atoi(av[4]);
+    client->addr = atoi(av[2]);
+    client->len = strlen(client->data);
+    client->sin.sin_family = AF_INET;
+    client->sin.sin_port = htons(client->port);
+    client->sin.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    return (client);
+}
+
+struct iphdr *init_iphdr(char **av, client_t *client)
+{
+    struct iphdr *iph = malloc(sizeof(*iph));
+    memset(iph, 0, sizeof(*iph));
+
     iph->ihl = 5;
-    iph->flags = 3;
     iph->version = 4;
-    iph->tos = 16;
-    iph->len = sizeof(iph_t) + sizeof(udph_t) + 1000;
+    iph->tos = 0;
+    iph->tot_len = htons(sizeof(struct iphdr) + sizeof(struct udphdr) + client->len);
     iph->id = htons(54321);
     iph->ttl = 64;
     iph->protocol = 17;
-    iph->offset = 13;
-    iph->src = inet_addr(av[1]);
-    iph->dest = inet_addr(av[3]);
-    iph->sin.sin_family = AF_INET;
-    iph->din.sin_family = AF_INET;
-    iph->sin.sin_port = htons(atoi(av[4]));
-    iph->sin.sin_addr.s_addr = inet_addr(av[2]);
+    iph->check = csum((unsigned short *)client->buffer, sizeof(struct iphdr) + sizeof(struct udphdr));
+    iph->saddr = inet_addr("127.0.0.1");
+    iph->daddr = inet_addr(av[2]);
+    iph->check = 0;
+
+    return (iph);
 }
 
-void init_udph(int ac, char **av, udph_t *udph)
+struct udphdr *init_udphdr(char **av, client_t *client)
 {
-    udph->udph_srcport = htons(atoi(av[2]));
-    udph->udph_destport = htons(atoi(av[4]));
-    udph->udph_len = htons(sizeof(udph_t));
+    struct udphdr *udph = malloc(sizeof(*udph));
+
+    udph->source = htons(54321);
+    udph->dest = htons(atoi(av[4]));
+    udph->len = htons((uint16_t)(sizeof(struct udphdr) + client->len));
+    udph->check = 0;
+
+    return (udph);
 }

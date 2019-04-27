@@ -10,6 +10,7 @@
 
 #include <netinet/in_systm.h>
 #include <netinet/ip_icmp.h>
+#include <netinet/udp.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <sys/socket.h>
@@ -21,42 +22,31 @@
 #include <netdb.h>
 #include <stdio.h>
 
-#define PCKT_LEN 8192
+#define BUFSIZE 8192
 
-typedef struct iph_s
-{
+typedef struct client_s {
     struct sockaddr_in sin;
-    struct sockaddr_in din;
-    unsigned char version;
-    unsigned char ihl;
-    unsigned char tos;
-    unsigned short int len;
-    unsigned short int id;
-    unsigned short int flags;
-    unsigned short int offset;
-    unsigned char ttl;
-    unsigned char protocol;
-    unsigned short int csum;
-    uint32_t src;
-    uint32_t dest;
-} iph_t;
-
-typedef struct udph_s
-{
-    unsigned short int udph_srcport;
-    unsigned short int udph_destport;
-    unsigned short int udph_len;
-    unsigned short int udph_chksum;
-} udph_t;
+    char buffer[BUFSIZE];
+    char *data;
+    int sock;
+    int port;
+    int addr;
+    int len;
+    int on;
+} client_t;
 
 int main(int ac, char **av);
-int mychap(int ac, char **av);
+int mychap(char **av);
 void help(void);
+void error_msg(char *msg);
+
+void send_msg(client_t *client);
 
 unsigned short csum(unsigned short *buf, int nwords);
-void sending(int sd, char *buffer, iph_t *iph);
+void sending(client_t *client);
 
-void init_iph(int ac, char **av, iph_t *iph);
-void init_udph(int ac, char **av, udph_t *udph);
+client_t *init_client();
+struct iphdr *init_iphdr(char **av, client_t *client);
+struct udphdr *init_udphdr(char **av, client_t *client);
 
 #endif

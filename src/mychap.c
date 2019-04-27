@@ -26,6 +26,7 @@ int mychap(char **av)
     client->data, client->len);
 
     send_msg(client);
+    get_msg(client, av);
     close(client->sock);
     return (0);
 }

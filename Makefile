@@ -10,7 +10,7 @@ NAME		=	client
 SRCS    	=	src/main.c		\
 				src/mychap.c	\
 				src/init.c		\
-				src/sending.c	\
+				src/message.c	\
 				src/functions.c
 
 OBJS		=	$(SRCS:.c=.o)

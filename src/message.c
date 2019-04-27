@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** NWP_mychap_2018
 ** File description:
-** sending.c
+** message.c
 */
 
 #include "mychap.h"
@@ -15,9 +15,15 @@ void send_msg(client_t *client)
         error_msg("Sendto error");
 }
 
-void get_msg(client_t *client)
+void get_msg(client_t *client, char **av)
 {
-    if (recvfrom(client->sock, client->rec, BUFSIZE, MSG_WAITALL,
-    (struct sockaddr *)&client->sin, &client->len) < 0)
+    char tmp[strlen(av[6]) + 10];
+
+    if (recv(client->sock, NULL, 0, 0) < 0)
         error_msg("Recv error");
+    if (recv(client->sock, client->rec, BUFSIZE, 0) < 0)
+        error_msg("Recv error");
+
+    strcpy(tmp, client->rec + sizeof(struct iphdr) + sizeof(struct udphdr));
+    strcat(tmp, av[6]);
 }

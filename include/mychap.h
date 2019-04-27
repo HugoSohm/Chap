@@ -43,6 +43,7 @@ void error_msg(char *msg);
 
 client_t *init_client();
 void send_msg(client_t *client);
+void get_msg(client_t *client, char **av);
 unsigned short csum(unsigned short *buf, int nwords);
 struct iphdr *init_iphdr(char **av, client_t *client);
 struct udphdr *init_udphdr(char **av, client_t *client);

@@ -11,6 +11,7 @@
 #include <netinet/in_systm.h>
 #include <netinet/ip_icmp.h>
 #include <netinet/udp.h>
+#include <openssl/sha.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <sys/socket.h>
@@ -23,12 +24,14 @@
 #include <stdio.h>
 
 #define BUFSIZE 8192
+#define NONCE_LENGTH 10
 
 typedef struct client_s {
     struct sockaddr_in sin;
     char buffer[BUFSIZE];
     char rec[BUFSIZE];
     char *data;
+    char *pass;
     int sock;
     int port;
     int addr;
@@ -36,16 +39,18 @@ typedef struct client_s {
     int on;
 } client_t;
 
+unsigned short csum(unsigned short *buf, int nwords);
 int main(int ac, char **av);
+void error_msg(char *msg);
 int mychap(char **av);
 void help(void);
-void error_msg(char *msg);
 
-client_t *init_client();
+struct udphdr *init_udphdr(client_t *client, char **av);
+struct iphdr *init_iphdr(client_t *client,char **av);
+char *sha256(client_t *client, const char *str);
 void send_msg(client_t *client);
-void get_msg(client_t *client, char **av);
-unsigned short csum(unsigned short *buf, int nwords);
-struct iphdr *init_iphdr(char **av, client_t *client);
-struct udphdr *init_udphdr(char **av, client_t *client);
+void send_mdp(client_t *client);
+void get_msg(client_t *client);
+client_t *init_client();
 
 #endif

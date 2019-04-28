@@ -20,7 +20,7 @@ INCL		=	-Iinclude
 
 CC			=	gcc
 RM			=	rm -f
-CFLAGS		=	-g3
+CFLAGS		=
 
 #####################################################
 
@@ -29,7 +29,7 @@ CFLAGS		=	-g3
 	@printf " \033[34m[Compilation]\033[39m %s\n" $<
 
 all	:	$(OBJS)
-	@$(CC) $(OBJS) -o $(NAME)
+	@$(CC) $(OBJS) -o $(NAME) -lcrypto
 	@printf "\n \033[33m[Message]\033[39m Server compilation done\n"
 
 clean	:

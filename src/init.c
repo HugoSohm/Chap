@@ -17,6 +17,7 @@ client_t *init_client(char **av)
     client->on = 1;
     client->port = atoi(av[4]);
     client->addr = atoi(av[2]);
+    client->pass = av[6];
     client->len = strlen(client->data);
     client->sin.sin_family = AF_INET;
     client->sin.sin_port = htons(client->port);
@@ -25,7 +26,7 @@ client_t *init_client(char **av)
     return (client);
 }
 
-struct iphdr *init_iphdr(char **av, client_t *client)
+struct iphdr *init_iphdr(client_t *client, char **av)
 {
     struct iphdr *iph = malloc(sizeof(*iph));
     memset(iph, 0, sizeof(*iph));
@@ -47,7 +48,7 @@ struct iphdr *init_iphdr(char **av, client_t *client)
     return (iph);
 }
 
-struct udphdr *init_udphdr(char **av, client_t *client)
+struct udphdr *init_udphdr(client_t *client, char **av)
 {
     struct udphdr *udph = malloc(sizeof(*udph));
 

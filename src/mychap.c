@@ -10,8 +10,8 @@
 int mychap(char **av)
 {
     client_t *client = init_client(av);
-    struct iphdr *iph = init_iphdr(av, client);
-    struct udphdr *udph = init_udphdr(av, client);
+    struct iphdr *iph = init_iphdr(client, av);
+    struct udphdr *udph = init_udphdr(client, av);
 
     if (client->sock < 0)
         error_msg("Socket error");
@@ -26,7 +26,8 @@ int mychap(char **av)
     client->data, client->len);
 
     send_msg(client);
-    get_msg(client, av);
+    get_msg(client);
+    send_mdp(client);
     close(client->sock);
     return (0);
 }

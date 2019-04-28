@@ -15,9 +15,9 @@ void send_msg(client_t *client)
         error_msg("Sendto error");
 }
 
-void get_msg(client_t *client, char **av)
+void get_msg(client_t *client)
 {
-    char tmp[strlen(av[6]) + 10];
+    char tmp[strlen(client->pass) + 10];
 
     if (recv(client->sock, NULL, 0, 0) < 0)
         error_msg("Recv error");
@@ -25,5 +25,17 @@ void get_msg(client_t *client, char **av)
         error_msg("Recv error");
 
     strcpy(tmp, client->rec + sizeof(struct iphdr) + sizeof(struct udphdr));
-    strcat(tmp, av[6]);
+    strcat(tmp, client->pass);
+    sha256(client, tmp);
+
+    memset(client->buffer + sizeof(struct iphdr) + sizeof(struct udphdr), 0, BUFSIZE - sizeof(struct iphdr) - sizeof(struct udphdr));
+    memcpy(client->buffer + sizeof(struct iphdr) + sizeof(struct udphdr), tmp, sizeof(tmp));
+}
+
+void send_mdp(client_t *client)
+{
+    if (sendto(client->sock, client->buffer, strlen(client->data) +
+    sizeof(struct iphdr) + sizeof(struct udphdr), 0, (struct sockaddr *)
+    &client->sin, sizeof(client->sin)) < 0)
+        error_msg("Sendto error");
 }

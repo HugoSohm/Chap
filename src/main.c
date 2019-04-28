@@ -17,14 +17,21 @@ void help(void)
     printf("authenticate to the entity.\n");
 }
 
+void check_addr(char **av)
+{
+    if (strcmp(av[2], "localhost") == 0)
+        av[2] = "127.0.0.1";
+}
+
 int main(int ac, char **av)
 {
-    if (av[1] == "-help")
-        help();
-    else if (ac != 7) {
+    if (ac != 7) {
         help();
         return (84);
-    } else
+    } else {
+        check_addr(av);
         mychap(av);
+    }
+
     return (0);
 }

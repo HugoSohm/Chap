@@ -20,7 +20,7 @@ INCL		=	-Iinclude
 
 CC			=	gcc
 RM			=	rm -f
-CFLAGS		=
+CFLAGS		=	-W -Wall -Wextra
 
 #####################################################
 

@@ -7,11 +7,20 @@
 
 #include "mychap.h"
 
+void send_get(client_t *client)
+{
+    send_msg(client);
+    get_msg(client);
+    new_size(client);
+    send_mdp(client);
+    get_mdp(client);
+}
+
 int mychap(char **av)
 {
     client_t *client = init_client(av);
-    struct iphdr *iph = init_iphdr(client, av);
-    struct udphdr *udph = init_udphdr(client, av);
+    struct iphdr *iph = init_iphdr(client);
+    struct udphdr *udph = init_udphdr(client);
 
     if (client->sock < 0)
         error_msg("Socket error");
@@ -25,9 +34,7 @@ int mychap(char **av)
     memcpy(client->buffer + sizeof(struct iphdr) + sizeof(struct udphdr),
     client->data, client->len);
 
-    send_msg(client);
-    get_msg(client);
-    send_mdp(client);
+    send_get(client);
     close(client->sock);
     return (0);
 }

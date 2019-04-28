@@ -32,25 +32,29 @@ typedef struct client_s {
     char rec[BUFSIZE];
     char *data;
     char *pass;
+    char *addr;
+    char *sha;
     int sock;
     int port;
-    int addr;
     int len;
     int on;
 } client_t;
 
 unsigned short csum(unsigned short *buf, int nwords);
+char *sha256(client_t *client, const char *str);
 int main(int ac, char **av);
 void error_msg(char *msg);
 int mychap(char **av);
 void help(void);
 
-struct udphdr *init_udphdr(client_t *client, char **av);
-struct iphdr *init_iphdr(client_t *client,char **av);
-char *sha256(client_t *client, const char *str);
+struct udphdr *init_udphdr(client_t *client);
+struct iphdr *init_iphdr(client_t *client);
+client_t *init_client();
+
+void new_size(client_t *client);
 void send_msg(client_t *client);
 void send_mdp(client_t *client);
 void get_msg(client_t *client);
-client_t *init_client();
+void get_mdp(client_t *client);
 
 #endif

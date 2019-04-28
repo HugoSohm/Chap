@@ -16,17 +16,17 @@ client_t *init_client(char **av)
     client->sock = socket(AF_INET, SOCK_RAW, IPPROTO_UDP);
     client->on = 1;
     client->port = atoi(av[4]);
-    client->addr = atoi(av[2]);
+    client->addr = av[2];
     client->pass = av[6];
     client->len = strlen(client->data);
     client->sin.sin_family = AF_INET;
     client->sin.sin_port = htons(client->port);
-    client->sin.sin_addr.s_addr = inet_addr("127.0.0.1");
+    client->sin.sin_addr.s_addr = inet_addr(av[2]);
 
     return (client);
 }
 
-struct iphdr *init_iphdr(client_t *client, char **av)
+struct iphdr *init_iphdr(client_t *client)
 {
     struct iphdr *iph = malloc(sizeof(*iph));
     memset(iph, 0, sizeof(*iph));
@@ -39,21 +39,19 @@ struct iphdr *init_iphdr(client_t *client, char **av)
     iph->id = htons(54321);
     iph->ttl = 64;
     iph->protocol = 17;
-    iph->check = csum((unsigned short *)client->buffer,
-    sizeof(struct iphdr) + sizeof(struct udphdr));
     iph->saddr = inet_addr("127.0.0.1");
-    iph->daddr = inet_addr(av[2]);
+    iph->daddr = inet_addr(client->addr);
     iph->check = 0;
 
     return (iph);
 }
 
-struct udphdr *init_udphdr(client_t *client, char **av)
+struct udphdr *init_udphdr(client_t *client)
 {
     struct udphdr *udph = malloc(sizeof(*udph));
 
-    udph->source = htons(54321);
-    udph->dest = htons(atoi(av[4]));
+    udph->uh_sport = htons(54321);
+    udph->uh_dport = htons(client->port);
     udph->len = htons((uint16_t)(sizeof(struct udphdr) + client->len));
     udph->check = 0;
 
